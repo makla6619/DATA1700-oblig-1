@@ -1,74 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nb">
 <head>
     <meta charset="UTF-8">
-    <title>Kino</title>
+    <title>Oblig 1 S369519</title>
     <script src="index.js"></script>
 </head>
+
+<style>
+    body {
+        font-family: 'Helvetica', sans-serif;
+    }
+
+    .feil{
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    .billetter{
+        border-collapse: collapse;
+        width: 30%;
+        text-align: left;
+    }
+
+    .billetter th{
+        padding-right: 20px;
+    }
+
+    .gronnKnapp{
+        background-color: white;
+        color: black;
+        border: 3px solid #04AA6D;
+        transition-duration: 0.4s;
+        padding: 12px 20px;
+        font-weight: bolder;
+    }
+
+    .gronnKnapp:hover{
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .rodKnapp{
+        background-color: white;
+        color: black;
+        border: 3px solid #f44336;
+        transition-duration: 0.4s;
+        padding: 12px 20px;
+    }
+
+    .rodKnapp:hover{
+        background-color: #f44336;
+        color: white;
+    }
+
+</style>
+
 <body>
-<h1>Bestilling av kinobiletter</h1>
 
-<table>
+<h1>Bestilling av kinobilletter</h1>
+
+<table class="center-table">
     <tr>
-        <form>
-            <td><label for="film">Velg film: </label></td>
-            <td><select id="film" >
-                <option>Velg film her</option>
-                <option>Jaws 1</option>
-                <option>Creed 1</option>
-                <option>Freedom writers</option>
-                <option>Rocky 1</option>
-            </select></td>
-            <td><label id="errorFilm" style = "color: red;"></label></td>
-        </form>
+        <td>Velg film:</td>
+        <td>
+            <select id="film">
+                <option value="Velg film her">Velg film her</option>
+                <option value="Biler">Biler</option>
+                <option value="Frost">Frost</option>
+                <option value="Nemo">Nemo</option>
+            </select>
+            <span id="feilFilm" class="feil"></span>
+        </td>
+    </tr>
+
+    <tr><td><br></td></tr>
+
+    <tr>
+        <td>Antall</td><td><input type="text" size="2" id="antall"/>
+        <span id="feilAntall" class="feil"></span></td>
+    </tr>
+
+    <tr><td><br></td></tr>
+
+    <tr>
+        <td>Fornavn</td><td><input type="text" id="fornavn"/>
+        <span id="feilFornavn" class="feil"></span></td>
     </tr>
 
     <tr>
-        <form>
-            <td><label for="antall">Antall</label></td>
-            <td><input type="text" id="antall"></td>
-            <td><label id="errorAntall" style = "color: red;"></label></td>
-        </form>
+        <td>Etternavn</td><td><input type="text" id="etternavn"/>
+        <span id="feilEtternavn" class="feil"></span></td>
     </tr>
 
     <tr>
-        <form>
-            <td><label for="fornavn">Fornavn</label></td>
-            <td><input type="text" id="fornavn"></td>
-            <td><label id="errorFornavn" style = "color: red;"></label></td>
-        </form>
+        <td>
+            Telefonnr</td><td><input type="text" id="telefonnr"/>
+        <span id="feilTelefonnr" class="feil"></span>
+    </td>
     </tr>
 
     <tr>
-        <form>
-            <td><label for="etternavn">Etternavn</label></td>
-            <td><input type="text" id="etternavn"></td>
-            <td><label id="errorEtternavn" style = "color: red;"></label></td>
-        </form>
+        <td>
+            Epost</td><td><input type="text" id="epost"/>
+        <span id="feilEpost" class="feil"></span>
+    </td>
     </tr>
 
     <tr>
-        <form>
-            <td><label for="telefonnr">Telefonnr</label></td>
-            <td><input type="text" id="telefonnr"></td>
-            <td><label id="errorTelefonnr" style = "color: red;"></label></td>
-        </form>
+        <td>
+            <button onclick="kjop()" class="gronnKnapp">Kjøp billett</button>
+        </td>
     </tr>
+</table>
 
-    <tr>
-        <form>
-            <td><label for="epost">Epost</label></td>
-            <td><input type="text" id="epost"></td>
-            <td><label id="errorEpost" style = "color: red;"></label></td>
-        </form>
-    </tr>
-</table><br>
 
-<button onclick="addFilm()">Kjøp bilett</button>
+<h2>Alle billetter</h2>
 
-<h2>Alle biletter</h2>
-<span id="output"></span><br><br>
+<br>
 
-<button onclick="deleteAll()">Slett alle bilettene</button>
+<table id="alleBilletter" class="billetter"></table>
+
+<button onclick=slett() class="rodKnapp">Slett alle billettene</button>
+
+
 </body>
 </html>

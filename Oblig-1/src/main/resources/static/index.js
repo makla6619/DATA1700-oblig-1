@@ -1,103 +1,132 @@
-//Oppretter et tomt array hvor jeg skal sette inn objekter(bestilling), og eventuelt tømme det
-let kinobiletter = [];
+const billetter = [];
 
-//Oppretter en let boolean(Prøvde const, men fikk rød strek) og setter den til true. Bruker
-//denne til å sjekke om det er skrevet noe i input feltene.
-let input = true;
 
-//Oppretter en funksjon addFilm(), som kjøres når knappen "kjøp bilett" klikkes
-function addFilm() {
+function kjop() {
+    const film = document.getElementById("film");
+    const antall = document.getElementById("antall");
+    const fornavn = document.getElementById("fornavn");
+    const etternavn = document.getElementById("etternavn");
+    const telefonnr = document.getElementById("telefonnr");
+    const epost = document.getElementById("epost");
 
-    //Oppretter objekt av verdiene som blir satt inn fra input-feltene
-    const bestilling = {
-        film: document.getElementById('film').value,
-        antall: document.getElementById('antall').value,
-        fornavn: document.getElementById('fornavn').value,
-        etternavn: document.getElementById('etternavn').value,
-        telefonnr: document.getElementById('telefonnr').value,
-        epost: document.getElementById('epost').value
-    };
 
-    //Hvis det ikke er skrevet/valgt noe i input-feltene, så skal feilmelding skrives ut.
-    //Dersom det er skrevet/valgt noe, så skal feilmeldingen settes til et tomt string ""
-    if(film.value === "Velg film her"){
-        document.getElementById('errorFilm').innerHTML = " Må velge en film";
-    } else{
-        document.getElementById('errorFilm').innerHTML = "";
+    let feilFilm = document.getElementById("feilFilm");
+    let feilAntall = document.getElementById("feilAntall");
+    let feilFornavn = document.getElementById("feilFornavn");
+    let feilEtternavn = document.getElementById("feilEtternavn");
+    let feilTelefonnr = document.getElementById("feilTelefonnr");
+    let feilEpost = document.getElementById("feilEpost");
+
+    //epostRegex sikrer at det er standard format på epost-adressen, altså x@x.x, tar IKKE hensyn til domenebegrensninger.
+    //https://stackoverflow.com/questions/50330109/simple-regex-pattern-for-email
+    let epostRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let epostResultat = ( epostRegex.test(epost.value) );
+
+    //tlfRegex sikrer at telefonnummeret er 8 siffer langt, starter på 9 eller 4 og kan skrives med +47/0047
+    //https://stackoverflow.com/questions/34001939/regular-expression-for-norwegian-numbers
+    let tlfRegex = /^((0047)?|(\+47)?)[4|9]\d{7}$/;
+    let tlfResultat = ( tlfRegex.test(telefonnr.value) );
+
+
+    // Tilbakestiller verdier for feilmeldinger
+    feilAntall.innerHTML = "";
+    feilFilm.innerHTML = "";
+    feilFornavn.innerHTML = "";
+    feilEtternavn.innerHTML = "";
+    feilTelefonnr.innerHTML = "";
+    feilEpost.innerHTML = "";
+
+
+    // Validering film
+    if ( film.value === "Velg film her" || film.value === "" ) {
+        feilFilm.innerHTML = "Du må velge en film!";
     }
 
-    if(antall.value === ""){
-        document.getElementById('errorAntall').innerHTML = " Må skrive noe inn i antall";
-
-    } else{
-        document.getElementById('errorAntall').innerHTML = "";
+    // Validering antall
+    if ( isNaN(Number(antall.value)) || !(1 <= Number(antall.value) && Number(antall.value) <= 50) || antall.value === "" ) {
+        feilAntall.innerHTML = "Antallet må være mellom 1 og 50!";
     }
 
-    if(fornavn.value === ""){
-        document.getElementById('errorFornavn').innerHTML = " Må skrive noe inn i fornavnet";
-    } else{
-        document.getElementById('errorFornavn').innerHTML = "";
+    // Validering fornavn
+    if ( fornavn.value === "" || /\d/.test(fornavn.value) ) {
+        feilFornavn.innerHTML = "Fornavn må fylles ut og være bokstaver!";
     }
 
-    if(etternavn.value === ""){
-        document.getElementById('errorEtternavn').innerHTML = " Må skrive noe inn i etternavnet";
-    } else{
-        document.getElementById('errorEtternavn').innerHTML = "";
+    // Validering etternavn
+    if ( etternavn.value === "" || /\d/.test(etternavn.value) ) {
+        feilEtternavn.innerHTML = "Etternavn må fylles ut og være bokstaver!";
     }
 
-    if(telefonnr.value === ""){
-        document.getElementById('errorTelefonnr').innerHTML = " Må skrive noe inn i telefonnr";
-    } else{
-        document.getElementById('errorTelefonnr').innerHTML = "";
+    // Validering telefonnummer
+    if ( !tlfResultat ) {
+        feilTelefonnr.innerHTML = "Ugyldig telefonnummer!";
     }
 
-    if(epost.value === ""){
-        document.getElementById('errorEpost').innerHTML = " Må skrive noe inn i epost";
-    } else{
-        document.getElementById('errorEpost').innerHTML = "";
+    // Validering epost
+    if ( !epostResultat ) {
+        feilEpost.innerHTML = "Ugyldig epostadresse!";
     }
 
-    //Dersom input-feltene er tomme, settes input = false og ufullstendige bestilling-objekter settes ikke inn i arrayet
-    if(antall.value === "" || fornavn.value === "" || etternavn.value === "" || telefonnr.value === "" || epost.value === "" || film.value === "Velg film her"){
-        input = false;
-    }
-    //Dersom input er true, så skal bestilling-objektet settes inn i kinobiletter arrayet.
-    if(input){
-        kinobiletter.push(bestilling);
+    //Stopper kjop() ved ugyldige inputverdier samt gjør at flere feilmeldinger vises samtidig.
+    if ( feilFilm.innerHTML || feilAntall.innerHTML || feilFornavn.innerHTML || feilEtternavn.innerHTML || feilTelefonnr.innerHTML || feilEpost.innerHTML ) {
+        return;
     }
 
-    //console.log(kinobiletter);
+    // Hvis ingen valideringsfeil, legg til billetten
+    else {
+        billetter.push({
+            Film: film.value,
+            Antall: antall.value,
+            Fornavn: fornavn.value,
+            Etternavn: etternavn.value,
+            Telefonnr: telefonnr.value,
+            Epost: epost.value
+        });
 
-    /*<th> er for overskrift-kolonner,
-    <tr> er rader,
-    <td> kolonner*/
+        // Oppdater tabellen med billettinformasjon
+        const filmer = document.getElementById("alleBilletter");
+        filmer.innerHTML = `
+                            <tr>
+                                <th>Film</th>
+                                <th>Antall</th>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Telefonnummer</th>
+                                <th>Epost</th>
+                            </tr>
+                            `;
 
-    //Bruker <table> for å lage en tabell for der output skal listes ut.
-    //Bruker <tr> for å lage en rad for overskriftene, og <th> for å ha overskriftene i "overskrift-kolonne".
-    let output = "<table><tr> <th>Film</th> <th>Antall</th> <th>Fornavn</th> <th>Etternavn</th> <th>Telefonnr</th> <th>Epost</th></tr>"
-
-    //Bruker en for-each løkke og legger til en rad for hvert objekt som skal listes ut, og kolonne for hver verdi.
-    for(let bilett of kinobiletter) {
-        output += "<tr> <td>" + bilett.film + "</td> <td>" + bilett.antall + "</td> <td>" + bilett.fornavn + "</td> <td>" + bilett.etternavn + "</td> <td>" + bilett.telefonnr + "</td> <td>" + bilett.epost + "</td></tr>";
+        for (let i = 0; i < billetter.length; i++) {
+            filmer.innerHTML += `
+                                <tr>
+                                    <td>${billetter[i].Film}</td>
+                                    <td>${billetter[i].Antall}</td>
+                                    <td>${billetter[i].Fornavn}</td>
+                                    <td>${billetter[i].Etternavn}</td>
+                                    <td>${billetter[i].Telefonnr}</td>
+                                    <td>${billetter[i].Epost}</td>
+                                </tr>
+                                `;
+        }
     }
-    output+= "</table>"
 
-    //Legger ut output på nettsiden
-    document.getElementById('output').innerHTML = output;
-
-    //Tømmer input-feltene
-    document.getElementById('film').value = "";
-    document.getElementById('antall').value = "";
-    document.getElementById('fornavn').value = "";
-    document.getElementById('etternavn').value = "";
-    document.getElementById('telefonnr').value = "";
-    document.getElementById('epost').value = "";
-
+    // Tilbakestiller inputfeltene
+    film.value = "Velg film her";
+    antall.value = "";
+    fornavn.value = "";
+    etternavn.value = "";
+    telefonnr.value = "";
+    epost.value = "";
 }
 
-//Oppretter en funksjon som tømmer arrayet når knappen "slett alle bilettene" trykkes,
-//og som også tømmer output-feltet.
-function deleteAll(){
-    kinobiletter = [];
-    document.getElementById('output').innerHTML = "";
+//Sletter alt i arrayet, samt tilbakestiller verdier
+function slett() {
+    billetter.length = 0;
+    document.getElementById("alleBilletter").innerHTML = "";
+    document.getElementById("film").value = "Velg film her";
+    document.getElementById("antall").value = "";
+    document.getElementById("fornavn").value = "";
+    document.getElementById("etternavn").value = "";
+    document.getElementById("telefonnr").value = "";
+    document.getElementById("epost").value = "";
 }
